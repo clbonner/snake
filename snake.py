@@ -12,10 +12,11 @@ class Snake():
         self.LCD.fill(self.LCD.BLACK)
         self.LCD.show()
 
-        self.left = Pin(15,Pin.IN,Pin.PULL_UP) 
-        self.down = Pin(17,Pin.IN,Pin.PULL_UP)
-        self.up = Pin(2 ,Pin.IN,Pin.PULL_UP)
-        self.right = Pin(3 ,Pin.IN,Pin.PULL_UP)
+        # key0 = down / key1 = left / key2 = right / key3 = up
+        self.up = Pin(3 ,Pin.IN,Pin.PULL_UP)
+        self.left = Pin(17,Pin.IN,Pin.PULL_UP) 
+        self.right = Pin(2 ,Pin.IN,Pin.PULL_UP)
+        self.down = Pin(15,Pin.IN,Pin.PULL_UP)
 
         # snake attributes
         # direction can be N, E, S, W
@@ -28,12 +29,14 @@ class Snake():
         self.level = 1
         self.MAX_LEVEL = 5
         self.fruit = 5
-        self.gameOver = False
+        self.gameNotOver = True
 
         self.welcomeScreen()
 
     def drawSnake(self):
         self.LCD.fill_rect(self.posX, self.posY, 10, 10, self.LCD.GREEN)
+        self.LCD.fill_rect(self.posX + 6, self.posY + 2, 2, 2, self.LCD.BLACK)
+        self.LCD.fill_rect(self.posX + 2, self.posY + 2, 2, 2, self.LCD.BLACK)
 
     def clearSnake(self):
         self.LCD.fill_rect(self.posX, self.posY, 10, 10, self.LCD.BLACK)
@@ -47,6 +50,7 @@ class Snake():
             self.posY += 5
         if (self.direction == 'W'):
             self.posX -= 5
+        self.checkOutOfBounds()
 
     def checkForKeypress(self):
         if (self.up.value() == 0):
@@ -58,19 +62,34 @@ class Snake():
         if (self.right.value() == 0):
             self.direction = 'E'
 
+    def checkOutOfBounds(self):
+        print("x ", self.posX, " y ", self.posY)
+        if (self.posY <  2 or
+            self.posX > self.LCD.width - 10 or
+            self.posY > self.LCD.height - 10 or
+            self.posX < 2):
+                self.gameOver()
+
+    def gameOver(self):
+        self.LCD.text("GAME OVER", int(self.LCD.width / 4.5), int(self.LCD.height / 2), self.LCD.RED)
+        self.gameNotOver = False
+        self.LCD.show()
+        exit(0)
+
     def start(self):
         self.LCD.fill(self.LCD.BLACK)
         self.setBorder()
         self.drawSnake()
         self.LCD.show()
 
-        while(not self.gameOver):
-            self.checkForKeypress()
+        while (self.gameNotOver):
+            for x in range(250):
+                self.checkForKeypress()
+                time.sleep_ms(1)
             self.clearSnake()
             self.moveSnake()
             self.drawSnake()
             self.LCD.show()
-            time.sleep_ms(250)
             
     def setBorder(self):
         self.LCD.hline(0,0,128,self.LCD.GBLUE)
