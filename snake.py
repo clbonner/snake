@@ -29,7 +29,6 @@ class Snake():
         self.level = 1
         self.MAX_LEVEL = 5
         self.fruit = 5
-        self.gameNotOver = True
 
         # levels are defined by speed (ms)
         self.LEVEL1 = 250
