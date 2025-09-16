@@ -22,7 +22,7 @@ class Snake():
         # direction can be N, E, S, W
         self.posX = int(self.LCD.width / 2)
         self.posY = int(self.LCD.height / 2)
-        self.size = 1
+        self.size = 3
         self.direction = 'N'
 
         # games attributes
@@ -42,12 +42,33 @@ class Snake():
         self.welcomeScreen()
 
     def drawSnake(self):
-        self.LCD.fill_rect(self.posX, self.posY, 10, 10, self.LCD.GREEN)
-        self.LCD.fill_rect(self.posX + 6, self.posY + 2, 2, 2, self.LCD.BLACK)
-        self.LCD.fill_rect(self.posX + 2, self.posY + 2, 2, 2, self.LCD.BLACK)
+        # head
+        self.LCD.fill_rect(self.posX, self.posY, 8, 8, self.LCD.GREEN)
+        self.LCD.fill_rect(self.posX + 5, self.posY + 2, 2, 2, self.LCD.BLACK)
+        self.LCD.fill_rect(self.posX + 1, self.posY + 2, 2, 2, self.LCD.BLACK)
+
+        # tail
+        for n in range(1, self.size):
+            if (self.direction == 'N'):
+                self.LCD.fill_rect(self.posX, self.posY + 9 * n, 8, 8, self.LCD.GREEN)
+            if (self.direction == 'E'):
+                self.LCD.fill_rect(self.posX - 9 * n, self.posY, 8, 8, self.LCD.GREEN)
+            if (self.direction == 'S'):
+                self.LCD.fill_rect(self.posX, self.posY - 9 * n, 8, 8, self.LCD.GREEN)
+            if (self.direction == 'W'):
+                self.LCD.fill_rect(self.posX + 9 * n, self.posY, 8, 8, self.LCD.GREEN)
 
     def clearSnake(self):
-        self.LCD.fill_rect(self.posX, self.posY, 10, 10, self.LCD.BLACK)
+        self.LCD.fill_rect(self.posX, self.posY, 8, 8, self.LCD.BLACK)
+        for n in range(1, self.size):
+            if (self.direction == 'N'):
+                self.LCD.fill_rect(self.posX, self.posY + 9 * n, 8, 8, self.LCD.BLACK)
+            if (self.direction == 'E'):
+                self.LCD.fill_rect(self.posX - 9 * n, self.posY, 8, 8, self.LCD.BLACK)
+            if (self.direction == 'S'):
+                self.LCD.fill_rect(self.posX, self.posY - 9 * n, 8, 8, self.LCD.BLACK)
+            if (self.direction == 'W'):
+                self.LCD.fill_rect(self.posX + 9 * n, self.posY, 8, 8, self.LCD.BLACK)
 
     def moveSnake(self):
         if (self.direction == 'N'):
@@ -105,10 +126,10 @@ class Snake():
         self.LCD.show()
 
         while (True):
+            self.clearSnake()
             for x in range(self.currentLevel):
                 self.checkForKeypress()
                 time.sleep_ms(1)
-            self.clearSnake()
             self.moveSnake()
             self.drawSnake()
             self.LCD.show()
