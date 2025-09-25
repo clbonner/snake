@@ -1,19 +1,16 @@
 from machine import Pin,PWM
 from picolcd144 import *
-import time
+import time, random
 
 class Snake():
-    def __init__(self, level):
-        # init display
-        pwm = PWM(Pin(BL))
-        pwm.freq(1000)
-        pwm.duty_u16(32000)#max 65535
-        self.LCD = LCD_1inch44()
+    def __init__(self, level, LCD):
+        self.LCD = LCD
         self.LCD.fill(self.LCD.BLACK)
         self.LCD.show()
 
-        self.height = self.getMaxDisplayLength(self.LCD.height)
-        self.width = self.getMaxDisplayLength(self.LCD.width)
+        # the screen size is divided up into 8x8 pixel squares
+        self.height = int(self.LCD.height / 8)
+        self.width = int(self.LCD.width / 8)
 
         # key0 = down / key1 = left / key2 = right / key3 = up
         self.up = Pin(3 ,Pin.IN,Pin.PULL_UP)
@@ -21,68 +18,83 @@ class Snake():
         self.right = Pin(2 ,Pin.IN,Pin.PULL_UP)
         self.down = Pin(15,Pin.IN,Pin.PULL_UP)
 
-        # snake coordinates
-        self.coordinates = [{'x': int(self.LCD.width / 2) - 4, 'y': int(self.LCD.height / 2) - 4}]
+        # snake coordinates - minus 4 pixels to centre 8x8 pixel snake head
+        self.coordinates = [{'x': int(self.width / 2), 'y': int(self.height / 2)}]
         self.direction = 'N'
 
         # game attributes
         self.MAX_LEVEL = 5
         self.fruit = 5
+        self.fruit_eaten = False
         self.game_over = False
-        self.border_height = self.height - 1
-        self.border_width = self.width - 1
 
         # levels are defined by speed (ms)
         self.CURRENT_LEVEL = level
-        if level == 1: self.SPEED = 250
-        if level == 2: self.SPEED = 200
-        if level == 3: self.SPEED = 150
-        if level == 4: self.SPEED = 100
-        if level == 5: self.SPEED = 50
+        if level == 1: self.SPEED = 500
+        if level == 2: self.SPEED = 400
+        if level == 3: self.SPEED = 300
+        if level == 4: self.SPEED = 250
+        if level == 5: self.SPEED = 200
+    
+    def setFruitLocation(self):
+        self.fruit_coordinates = {
+            'x': random.randint(1, int(self.width) - 2), 
+            'y': random.randint(1, int(self.height) - 2)
+        }
+        for location in self.coordinates:
+            if (location == self.fruit_coordinates):
+                self.setFruitLocation()
 
-    def getMaxDisplayLength(self, n):
-        count = 1
-        length = 8
-        while (length < n):
-            count += 1
-            length += 8
-        return count * 8
+    def drawFruit(self):
+        self.LCD.fill_rect(
+            self.fruit_coordinates['x'] * 8, 
+            self.fruit_coordinates['y'] * 8, 8, 8, 
+            self.LCD.BLUE
+        )
+        self.LCD.show()
+
+    def isFruitEaten(self):
+        if (self.coordinates[0] == self.fruit_coordinates):
+            self.setFruitLocation()
+            self.drawFruit()
+            self.growSnake()
+            return True
+        return False
 
     def drawSnake(self):
-        for block in self.coordinates:
-            self.LCD.fill_rect(block['x'], block['y'], 8, 8, self.LCD.GREEN)
-            if self.coordinates.index(block) == 0:
-                self.LCD.fill_rect(block['x'] + 5, block['y'] + 2, 2, 2, self.LCD.BLACK)
-                self.LCD.fill_rect(block['x'] + 1, block['y'] + 2, 2, 2, self.LCD.BLACK)
+        for location in self.coordinates:
+            self.LCD.fill_rect(location['x'] * 8, location['y'] * 8, 8, 8, self.LCD.GREEN)
+            if self.coordinates.index(location) == 0:
+                self.LCD.fill_rect(location['x'] * 8 + 5, location['y'] * 8 + 2, 2, 2, self.LCD.BLACK)
+                self.LCD.fill_rect(location['x'] * 8 + 1, location['y'] * 8 + 2, 2, 2, self.LCD.BLACK)
 
-    def clearSnake(self, block):
-        self.LCD.fill_rect(block['x'], block['y'], 8, 8, self.LCD.BLACK)
+    def clearSnake(self, location):
+        self.LCD.fill_rect(location['x'] * 8, location['y'] * 8, 8, 8, self.LCD.BLACK)
 
     def moveSnake(self):
         head = self.coordinates[0]
         if (self.direction == 'N'):
-            self.coordinates.insert(0, {'x': head['x'], 'y': head['y'] - 8})
+            self.coordinates.insert(0, {'x': head['x'], 'y': head['y'] - 1})
         if (self.direction == 'E'):
-            self.coordinates.insert(0, {'x': head['x'] + 8, 'y': head['y']})
+            self.coordinates.insert(0, {'x': head['x'] + 1, 'y': head['y']})
         if (self.direction == 'S'):
-            self.coordinates.insert(0, {'x': head['x'], 'y': head['y'] + 8})
+            self.coordinates.insert(0, {'x': head['x'], 'y': head['y'] + 1})
         if (self.direction == 'W'):
-            self.coordinates.insert(0, {'x': head['x'] - 8, 'y': head['y']})
+            self.coordinates.insert(0, {'x': head['x'] - 1, 'y': head['y']})
 
         self.clearSnake(self.coordinates.pop(len(self.coordinates) - 1))
         self.checkOutOfBounds()
-        self.checkHeadIntoTail()
 
     def growSnake(self):
         head = self.coordinates[0]
         if (self.direction == 'N'):
-            self.coordinates.insert(0, {'x': head['x'], 'y': head['y'] - 8})
+            self.coordinates.insert(0, {'x': head['x'], 'y': head['y'] - 1})
         if (self.direction == 'E'):
-            self.coordinates.insert(0, {'x': head['x'] + 8, 'y': head['y']})
+            self.coordinates.insert(0, {'x': head['x'] + 1, 'y': head['y']})
         if (self.direction == 'S'):
-            self.coordinates.insert(0, {'x': head['x'], 'y': head['y'] + 8})
+            self.coordinates.insert(0, {'x': head['x'], 'y': head['y'] + 1})
         if (self.direction == 'W'):
-            self.coordinates.insert(0, {'x': head['x'] - 8, 'y': head['y']})
+            self.coordinates.insert(0, {'x': head['x'] - 1, 'y': head['y']})
 
 
     def checkForDirectionChange(self):
@@ -96,19 +108,17 @@ class Snake():
             self.direction = 'W'
 
     def checkOutOfBounds(self):
+        # check if snake head hits the border
         if (self.coordinates[0]['y'] <  1 or
-            self.coordinates[0]['x'] > self.border_width or
-            self.coordinates[0]['y'] > self.border_height or
+            self.coordinates[0]['x'] > self.width - 2 or
+            self.coordinates[0]['y'] > self.height - 2 or
             self.coordinates[0]['x'] < 1):
                 self.gameOver()
-
-    def checkHeadIntoTail(self):
+        # check if head hits another part of the snake
         head = self.coordinates[0]
-        for block in self.coordinates:
-            if (block['x'] == head['x'] and
-                block['y'] == head['y'] and
-                self.coordinates.index(block) != 0):
-                    self.gameOver()
+        for index in range(1, len(self.coordinates)):
+            if (self.coordinates[index] == head):
+                self.gameOver()
 
     def gameOver(self):
         self.LCD.fill(self.LCD.GREEN)
@@ -116,10 +126,11 @@ class Snake():
         self.LCD.show()
 
         # reset snake position
-        self.coordinates = [{'x': int(self.LCD.width / 2), 'y': int(self.LCD.height / 2)}]
+        self.coordinates = [{'x': int(self.width / 2), 'y': int(self.height / 2)}]
         self.direction = 'N'
 
         self.game_over = True
+        self.fruit_eaten = True
         self.waitForKeyPress()
         
     def waitForKeyPress(self):
@@ -135,20 +146,24 @@ class Snake():
         self.LCD.fill(self.LCD.BLACK)
         self.setBorder()
         self.growSnake()
+        self.setFruitLocation()
 
-        while (not self.game_over):
-            self.drawSnake()
-            self.LCD.show()
-            for x in range(self.SPEED):
-                self.checkForDirectionChange()
-                time.sleep_ms(1)
-            self.moveSnake()
+        while (not self.fruit_eaten):
+            self.drawFruit()
+            while (not self.game_over):
+                self.drawSnake()
+                self.LCD.show()
+                for x in range(self.SPEED):
+                    self.checkForDirectionChange()
+                    time.sleep_ms(1)
+                if (not self.isFruitEaten()):
+                    self.moveSnake()
             
     def setBorder(self):
-        self.LCD.hline(0, 0, self.border_width, self.LCD.GBLUE)
-        self.LCD.hline(0, self.border_height, self.border_width, self.LCD.GBLUE)
-        self.LCD.vline(0, 0, self.border_height, self.LCD.GBLUE)
-        self.LCD.vline(self.border_width, 0, self.border_height, self.LCD.GBLUE)
+        self.LCD.hline(0, 0, self.LCD.width, self.LCD.GBLUE)
+        self.LCD.hline(0, self.LCD.height - 1, self.LCD.width, self.LCD.GBLUE)
+        self.LCD.vline(0, 0, self.LCD.height, self.LCD.GBLUE)
+        self.LCD.vline(self.LCD.width - 1, 0, self.LCD.height, self.LCD.GBLUE)
 
     def welcomeScreen(self):
         self.LCD.fill(self.LCD.BLACK)
@@ -166,7 +181,14 @@ class Snake():
         return self.CURRENT_LEVEL
 
 if __name__=='__main__':
+
+    # init display
+    pwm = PWM(Pin(BL))
+    pwm.freq(1000)
+    pwm.duty_u16(32000)#max 65535
+    LCD = LCD_1inch44()
+
     level = 1
     while level <= 5:
-        game = Snake(level)
+        game = Snake(level, LCD)
         level = game.play()
