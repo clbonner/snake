@@ -182,7 +182,6 @@ class Snake():
 
     def welcomeScreen(self):
         self.LCD.fill(self.LCD.BLACK)
-        #self.setBorder()
         width = self.LCD.width / 100
         height = self.LCD.height / 100
         level_text = "LEVEL " + str(self.CURRENT_LEVEL)
