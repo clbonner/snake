@@ -57,6 +57,9 @@ class Snake():
             self.setFruitLocation()
             self.drawFruit()
             self.growSnake()
+            self.fruit_left -= 1
+            if self.fruit_left == 0:
+                self.gameWon()
             return True
         return False
 
@@ -114,6 +117,7 @@ class Snake():
             self.coordinates[0]['y'] > self.height - 2 or
             self.coordinates[0]['x'] < 1):
                 self.gameOver()
+
         # check if head hits another part of the snake
         head = self.coordinates[0]
         for index in range(1, len(self.coordinates) - 1):
@@ -125,6 +129,22 @@ class Snake():
         self.LCD.text("GAME OVER", int(self.LCD.width / 4.5), int(self.LCD.height / 2), self.LCD.RED)
         self.LCD.show()
 
+        self.game_over = True
+        self.waitForKeyPress()
+    
+    def gameWon(self):
+        self.LCD.fill(self.LCD.GREEN)
+        width = self.LCD.width / 100
+        height = self.LCD.height / 100
+        if (self.CURRENT_LEVEL < 5):
+            self.LCD.text("LEVEL", int(width * 37), int(height * 35), self.LCD.RED)
+            self.LCD.text("COMPLETE!", int(width * 25), int(height * 50), self.LCD.RED)
+            self.CURRENT_LEVEL += 1
+        else:
+            self.LCD.text("YOU WIN!", int(width * 27), int(height * 45), self.LCD.RED)
+            self.CURRENT_LEVEL = 1
+
+        self.LCD.show()
         self.game_over = True
         self.waitForKeyPress()
         
