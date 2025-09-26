@@ -23,8 +23,7 @@ class Snake():
         self.direction = 'N'
 
         # game attributes
-        self.MAX_LEVEL = 5
-        self.fruit = 5
+        self.fruit_left = 10
         self.fruit_eaten = False
         self.game_over = False
 
@@ -67,6 +66,7 @@ class Snake():
             if self.coordinates.index(location) == 0:
                 self.LCD.fill_rect(location['x'] * 8 + 5, location['y'] * 8 + 2, 2, 2, self.LCD.BLACK)
                 self.LCD.fill_rect(location['x'] * 8 + 1, location['y'] * 8 + 2, 2, 2, self.LCD.BLACK)
+        self.LCD.show()
 
     def clearSnake(self, location):
         self.LCD.fill_rect(location['x'] * 8, location['y'] * 8, 8, 8, self.LCD.BLACK)
@@ -116,7 +116,7 @@ class Snake():
                 self.gameOver()
         # check if head hits another part of the snake
         head = self.coordinates[0]
-        for index in range(1, len(self.coordinates)):
+        for index in range(1, len(self.coordinates) - 1):
             if (self.coordinates[index] == head):
                 self.gameOver()
 
@@ -125,12 +125,7 @@ class Snake():
         self.LCD.text("GAME OVER", int(self.LCD.width / 4.5), int(self.LCD.height / 2), self.LCD.RED)
         self.LCD.show()
 
-        # reset snake position
-        self.coordinates = [{'x': int(self.width / 2), 'y': int(self.height / 2)}]
-        self.direction = 'N'
-
         self.game_over = True
-        self.fruit_eaten = True
         self.waitForKeyPress()
         
     def waitForKeyPress(self):
@@ -147,30 +142,34 @@ class Snake():
         self.setBorder()
         self.growSnake()
         self.setFruitLocation()
+        self.drawFruit()
 
-        while (not self.fruit_eaten):
-            self.drawFruit()
-            while (not self.game_over):
-                self.drawSnake()
-                self.LCD.show()
-                for x in range(self.SPEED):
-                    self.checkForDirectionChange()
-                    time.sleep_ms(1)
-                if (not self.isFruitEaten()):
-                    self.moveSnake()
+        while (not self.game_over):
+            self.drawSnake()
+            for x in range(self.SPEED):
+                self.checkForDirectionChange()
+                time.sleep_ms(1)
+            if (not self.isFruitEaten()):
+                self.moveSnake()
             
     def setBorder(self):
-        self.LCD.hline(0, 0, self.LCD.width, self.LCD.GBLUE)
-        self.LCD.hline(0, self.LCD.height - 1, self.LCD.width, self.LCD.GBLUE)
-        self.LCD.vline(0, 0, self.LCD.height, self.LCD.GBLUE)
-        self.LCD.vline(self.LCD.width - 1, 0, self.LCD.height, self.LCD.GBLUE)
+        for n in range(1, 8):
+            self.LCD.hline(n, n, self.LCD.width, self.LCD.GBLUE)
+            self.LCD.hline(n, self.LCD.height - n, self.LCD.width, self.LCD.GBLUE)
+            self.LCD.vline(n, n, self.LCD.height, self.LCD.GBLUE)
+            self.LCD.vline(self.LCD.width - n, n, self.LCD.height, self.LCD.GBLUE)
 
     def welcomeScreen(self):
         self.LCD.fill(self.LCD.BLACK)
-        self.setBorder()
-        self.LCD.text("SNAKE", 45, 25, self.LCD.GREEN)
-        self.LCD.text("Press any key", 10, 50, self.LCD.WHITE)
-        self.LCD.text("to start...", 20, 70, self.LCD.WHITE)
+        #self.setBorder()
+        width = self.LCD.width / 100
+        height = self.LCD.height / 100
+        level_text = "LEVEL " + str(self.CURRENT_LEVEL)
+
+        self.LCD.text("SNAKE", int(width * 37), int(height * 20), self.LCD.GREEN)
+        self.LCD.text("Press any key", int(width * 10), int(height * 40), self.LCD.WHITE)
+        self.LCD.text("for", int(width * 45), int(height * 50), self.LCD.WHITE)
+        self.LCD.text(level_text, int(width * 35), int(height * 70), self.LCD.GREEN)
         self.LCD.show()
 
         self.waitForKeyPress()
