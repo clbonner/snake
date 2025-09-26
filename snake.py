@@ -54,12 +54,13 @@ class Snake():
 
     def isFruitEaten(self):
         if (self.coordinates[0] == self.fruit_coordinates):
-            self.setFruitLocation()
-            self.drawFruit()
-            self.growSnake()
             self.fruit_left -= 1
             if self.fruit_left == 0:
                 self.gameWon()
+            else:
+                self.setFruitLocation()
+                self.drawFruit()
+                self.growSnake()
             return True
         return False
 
