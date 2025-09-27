@@ -187,9 +187,9 @@ class Snake():
         level_text = "LEVEL " + str(self.CURRENT_LEVEL)
 
         self.LCD.text("SNAKE", int(width * 37), int(height * 20), self.LCD.GREEN)
-        self.LCD.text("Press any key", int(width * 10), int(height * 40), self.LCD.WHITE)
-        self.LCD.text("for", int(width * 45), int(height * 50), self.LCD.WHITE)
-        self.LCD.text(level_text, int(width * 35), int(height * 70), self.LCD.GREEN)
+        self.LCD.text(level_text, int(width * 32), int(height * 40), self.LCD.GREEN)
+        self.LCD.text("Press any key", int(width * 10), int(height * 60), self.LCD.WHITE)
+        self.LCD.text("to start", int(width * 27), int(height * 70), self.LCD.WHITE)
         self.LCD.show()
 
         self.waitForKeyPress()
