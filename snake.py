@@ -23,7 +23,7 @@ class Snake():
         self.direction = 'N'
 
         # game attributes
-        self.fruit_left = 10
+        self.fruit_left = 15
         self.fruit_eaten = False
         self.game_over = False
 
@@ -167,7 +167,7 @@ class Snake():
 
         while (not self.game_over):
             self.drawSnake()
-            for x in range(self.SPEED):
+            for n in range(self.SPEED):
                 self.checkForDirectionChange()
                 time.sleep_ms(1)
             if (not self.isFruitEaten()):
