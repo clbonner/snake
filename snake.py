@@ -12,13 +12,17 @@ class Snake():
         self.height = int(self.LCD.height / 8)
         self.width = int(self.LCD.width / 8)
 
+        # height and width value for 1% of screen for positioning text
+        self.WIDTH_1PC = int(self.LCD.width / 100)
+        self.HEIGHT_1PC = int(self.LCD.height / 100)
+
         # key0 = down / key1 = left / key2 = right / key3 = up
         self.up = Pin(3 ,Pin.IN,Pin.PULL_UP)
         self.left = Pin(17,Pin.IN,Pin.PULL_UP) 
         self.right = Pin(2 ,Pin.IN,Pin.PULL_UP)
         self.down = Pin(15,Pin.IN,Pin.PULL_UP)
 
-        # snake coordinates - minus 4 pixels to centre 8x8 pixel snake head
+        # snake coordinates
         self.coordinates = [{'x': int(self.width / 2), 'y': int(self.height / 2)}]
         self.direction = 'N'
 
@@ -100,7 +104,6 @@ class Snake():
         if (self.direction == 'W'):
             self.coordinates.insert(0, {'x': head['x'] - 1, 'y': head['y']})
 
-
     def checkForDirectionChange(self):
         if (self.up.value() == 0 and self.direction != 'S'):
             self.direction = 'N'
@@ -127,7 +130,7 @@ class Snake():
 
     def gameOver(self):
         self.LCD.fill(self.LCD.GREEN)
-        self.LCD.text("GAME OVER", int(self.LCD.width / 4.5), int(self.LCD.height / 2), self.LCD.RED)
+        self.LCD.text("GAME OVER", int(self.WIDTH_1PC * 28), int(self.HEIGHT_1PC * 50), self.LCD.RED)
         self.LCD.show()
 
         self.game_over = True
@@ -135,14 +138,12 @@ class Snake():
     
     def gameWon(self):
         self.LCD.fill(self.LCD.GREEN)
-        width = self.LCD.width / 100
-        height = self.LCD.height / 100
         if (self.CURRENT_LEVEL < 5):
-            self.LCD.text("LEVEL", int(width * 37), int(height * 35), self.LCD.RED)
-            self.LCD.text("COMPLETE!", int(width * 25), int(height * 50), self.LCD.RED)
+            self.LCD.text("LEVEL", int(self.WIDTH_1PC * 46), int(self.HEIGHT_1PC * 50), self.LCD.RED)
+            self.LCD.text("COMPLETE!", int(self.WIDTH_1PC * 30), int(self.HEIGHT_1PC * 60), self.LCD.RED)
             self.CURRENT_LEVEL += 1
         else:
-            self.LCD.text("YOU WIN!", int(width * 27), int(height * 45), self.LCD.RED)
+            self.LCD.text("YOU WIN!", int(self.WIDTH_1PC * 33), int(self.HEIGHT_1PC * 50), self.LCD.RED)
             self.CURRENT_LEVEL = 1
 
         self.LCD.show()
@@ -175,21 +176,19 @@ class Snake():
             
     def setBorder(self):
         for n in range(1, 8):
-            self.LCD.hline(n, n, self.LCD.width, self.LCD.GBLUE)
-            self.LCD.hline(n, self.LCD.height - n, self.LCD.width, self.LCD.GBLUE)
-            self.LCD.vline(n, n, self.LCD.height, self.LCD.GBLUE)
-            self.LCD.vline(self.LCD.width - n, n, self.LCD.height, self.LCD.GBLUE)
+            self.LCD.hline(n, n, self.LCD.width, self.LCD.RED)
+            self.LCD.hline(n, self.LCD.height - n, self.LCD.width, self.LCD.RED)
+            self.LCD.vline(n, n, self.LCD.height, self.LCD.RED)
+            self.LCD.vline(self.LCD.width - n, n, self.LCD.height, self.LCD.RED)
 
     def welcomeScreen(self):
-        self.LCD.fill(self.LCD.BLACK)
-        width = self.LCD.width / 100
-        height = self.LCD.height / 100
         level_text = "LEVEL " + str(self.CURRENT_LEVEL)
 
-        self.LCD.text("SNAKE", int(width * 37), int(height * 20), self.LCD.GREEN)
-        self.LCD.text(level_text, int(width * 32), int(height * 40), self.LCD.GREEN)
-        self.LCD.text("Press any key", int(width * 10), int(height * 60), self.LCD.WHITE)
-        self.LCD.text("to start", int(width * 27), int(height * 70), self.LCD.WHITE)
+        self.LCD.fill(self.LCD.BLACK)
+        self.LCD.text("SNAKE", int(self.WIDTH_1PC * 43), int(self.HEIGHT_1PC * 20), self.LCD.GREEN)
+        self.LCD.text(level_text, int(self.WIDTH_1PC * 37), int(self.HEIGHT_1PC * 40), self.LCD.GREEN)
+        self.LCD.text("Press any key", int(self.WIDTH_1PC * 10), int(self.HEIGHT_1PC * 60), self.LCD.WHITE)
+        self.LCD.text("to start", int(self.WIDTH_1PC * 27), int(self.HEIGHT_1PC * 70), self.LCD.WHITE)
         self.LCD.show()
 
         self.waitForKeyPress()
@@ -207,6 +206,7 @@ if __name__=='__main__':
     pwm.duty_u16(32000)#max 65535
     LCD = LCD_1inch44()
 
+    # init game
     level = 1
     while level <= 5:
         game = Snake(level, LCD)
