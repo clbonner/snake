@@ -176,10 +176,10 @@ class Snake():
             
     def setBorder(self):
         for n in range(1, 8):
-            self.LCD.hline(n, n, self.LCD.width, self.LCD.RED)
-            self.LCD.hline(n, self.LCD.height - n, self.LCD.width, self.LCD.RED)
-            self.LCD.vline(n, n, self.LCD.height, self.LCD.RED)
-            self.LCD.vline(self.LCD.width - n, n, self.LCD.height, self.LCD.RED)
+            self.LCD.hline(n, n, self.LCD.width, self.LCD.WHITE)
+            self.LCD.hline(n, self.LCD.height - n, self.LCD.width, self.LCD.WHITE)
+            self.LCD.vline(n, n, self.LCD.height, self.LCD.WHITE)
+            self.LCD.vline(self.LCD.width - n, n, self.LCD.height, self.LCD.WHITE)
 
     def welcomeScreen(self):
         level_text = "LEVEL " + str(self.CURRENT_LEVEL)
