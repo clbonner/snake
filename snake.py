@@ -154,7 +154,33 @@ class Snake():
         self.LCD.show()
         self.game_over = True
         self.waitForKeyPress()
-        
+    
+    def instructions(self):
+        self.LCD.fill(self.LCD.BLACK)
+        self.LCD.text("Move UP", self.WIDTH_1PC * 10, self.HEIGHT_1PC * 5, self.LCD.WHITE)
+        self.LCD.text("Move RIGHT", self.WIDTH_1PC * 10, self.HEIGHT_1PC * 40, self.LCD.WHITE)
+        self.LCD.text("Move LEFT", self.WIDTH_1PC * 10, self.HEIGHT_1PC * 79, self.LCD.WHITE)
+        self.LCD.text("Move DOWN", self.WIDTH_1PC * 10, self.HEIGHT_1PC * 115, self.LCD.WHITE)
+        # arrow 1
+        self.LCD.hline(self.WIDTH_1PC * 100, self.HEIGHT_1PC * 10, 25, self.LCD.WHITE)
+        self.LCD.line(self.WIDTH_1PC * 125, self.HEIGHT_1PC * 10, self.WIDTH_1PC * 115, self.HEIGHT_1PC * 5, self.LCD.WHITE)
+        self.LCD.line(self.WIDTH_1PC * 125, self.HEIGHT_1PC * 10, self.WIDTH_1PC * 115, self.HEIGHT_1PC * 15, self.LCD.WHITE)
+        # arrow 2
+        self.LCD.hline(self.WIDTH_1PC * 100, self.HEIGHT_1PC * 45, 25, self.LCD.WHITE)
+        self.LCD.line(self.WIDTH_1PC * 125, self.HEIGHT_1PC * 45, self.WIDTH_1PC * 115, self.HEIGHT_1PC * 40, self.LCD.WHITE)
+        self.LCD.line(self.WIDTH_1PC * 125, self.HEIGHT_1PC * 45, self.WIDTH_1PC * 115, self.HEIGHT_1PC * 50, self.LCD.WHITE)
+        # arrow 3
+        self.LCD.hline(self.WIDTH_1PC * 100, self.HEIGHT_1PC * 84, 25, self.LCD.WHITE)
+        self.LCD.line(self.WIDTH_1PC * 125, self.HEIGHT_1PC * 84, self.WIDTH_1PC * 115, self.HEIGHT_1PC * 79, self.LCD.WHITE)
+        self.LCD.line(self.WIDTH_1PC * 125, self.HEIGHT_1PC * 84, self.WIDTH_1PC * 115, self.HEIGHT_1PC * 89, self.LCD.WHITE)
+        # arrow 4
+        self.LCD.hline(self.WIDTH_1PC * 100, self.HEIGHT_1PC * 120, 25, self.LCD.WHITE)
+        self.LCD.line(self.WIDTH_1PC * 125, self.HEIGHT_1PC * 120, self.WIDTH_1PC * 115, self.HEIGHT_1PC * 115, self.LCD.WHITE)
+        self.LCD.line(self.WIDTH_1PC * 125, self.HEIGHT_1PC * 120, self.WIDTH_1PC * 115, self.HEIGHT_1PC * 125, self.LCD.WHITE)
+        self.LCD.show()
+
+        self.waitForKeyPress()
+
     def waitForKeyPress(self):
         while (True):
             time.sleep_ms(100)
@@ -197,6 +223,7 @@ class Snake():
         self.LCD.show()
 
         self.waitForKeyPress()
+        self.instructions()
         self.startGame()
     
     def play(self):
