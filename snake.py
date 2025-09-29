@@ -206,7 +206,7 @@ class Snake():
                 self.moveSnake()
             
     def setBorder(self):
-        for n in range(1, 8):
+        for n in range(1, 7):
             self.LCD.hline(n, n, self.LCD.width, self.LCD.WHITE)
             self.LCD.hline(n, self.LCD.height - n, self.LCD.width, self.LCD.WHITE)
             self.LCD.vline(n, n, self.LCD.height, self.LCD.WHITE)
