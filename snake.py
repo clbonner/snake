@@ -73,6 +73,7 @@ class Snake():
                 self.setFruitLocation()
                 self.drawFruit()
                 self.growSnake()
+                self.checkOutOfBounds()
             return True
         return False
 
@@ -165,6 +166,13 @@ class Snake():
             self.LCD.rect(n, n, self.LCD.width - n * 2, self.LCD.height - n * 2, self.LCD.GREEN)
             self.LCD.show()
     
+    def setBorder(self):
+            for n in range(0, 8):
+                self.LCD.hline(n, n, self.LCD.width, self.LCD.WHITE)
+                self.LCD.hline(n, (self.LCD.height - 1) - n, self.LCD.width, self.LCD.WHITE)
+                self.LCD.vline(n, n, self.LCD.height, self.LCD.WHITE)
+                self.LCD.vline((self.LCD.width - 1) - n, n, self.LCD.height, self.LCD.WHITE)
+                
     def instructions(self):
         self.LCD.fill(self.LCD.BLACK)
         self.LCD.text("Move UP", self.pWidth(10), self.pHeight(5), self.LCD.WHITE)
@@ -214,13 +222,6 @@ class Snake():
                 time.sleep_ms(1)
             if (not self.isFruitEaten()):
                 self.moveSnake()
-            
-    def setBorder(self):
-        for n in range(1, 7):
-            self.LCD.hline(n, n, self.LCD.width, self.LCD.WHITE)
-            self.LCD.hline(n, self.LCD.height - n, self.LCD.width, self.LCD.WHITE)
-            self.LCD.vline(n, n, self.LCD.height, self.LCD.WHITE)
-            self.LCD.vline(self.LCD.width - n, n, self.LCD.height, self.LCD.WHITE)
 
     def welcomeScreen(self):
         level_text = "LEVEL " + str(self.CURRENT_LEVEL)
