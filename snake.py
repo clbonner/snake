@@ -83,7 +83,6 @@ class Snake():
     # removes end snake position from screen
     def clearSnake(self, location):
         self.LCD.fill_rect(location['x'] * 8, location['y'] * 8, 8, 8, self.LCD.BLACK)
-        self.LCD.show()
 
     # advances snake by one position and removes last list item
     def moveSnake(self):
@@ -97,8 +96,8 @@ class Snake():
         if (self.direction == 'W'):
             self.coordinates.insert(0, {'x': head['x'] - 1, 'y': head['y']})
 
-        self.clearSnake(self.coordinates.pop(len(self.coordinates) - 1))
         self.checkOutOfBounds()
+        self.clearSnake(self.coordinates.pop(len(self.coordinates) - 1))
 
     # inserts a new head at the start of the list
     def growSnake(self):
