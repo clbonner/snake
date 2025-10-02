@@ -136,6 +136,7 @@ class Snake():
                 self.gameOver()
 
     def gameOver(self):
+        self.setBorder(self.LCD.RED)
         self.endGameEffect()
         self.LCD.text("GAME OVER", self.pWidth(22), self.pHeight(45), self.LCD.RED)
         self.LCD.show()
@@ -162,12 +163,12 @@ class Snake():
             self.LCD.rect(n, n, self.LCD.width - n * 2, self.LCD.height - n * 2, self.LCD.GREEN)
             self.LCD.show()
     
-    def setBorder(self):
+    def setBorder(self, color):
             for n in range(0, 8):
-                self.LCD.hline(n, n, self.LCD.width, self.LCD.WHITE)
-                self.LCD.hline(n, (self.LCD.height - 1) - n, self.LCD.width, self.LCD.WHITE)
-                self.LCD.vline(n, n, self.LCD.height, self.LCD.WHITE)
-                self.LCD.vline((self.LCD.width - 1) - n, n, self.LCD.height, self.LCD.WHITE)
+                self.LCD.hline(n, n, self.LCD.width, color)
+                self.LCD.hline(n, (self.LCD.height - 1) - n, self.LCD.width, color)
+                self.LCD.vline(n, n, self.LCD.height, color)
+                self.LCD.vline((self.LCD.width - 1) - n, n, self.LCD.height, color)
 
     def instructions(self):
         self.LCD.fill(self.LCD.BLACK)
@@ -207,7 +208,7 @@ class Snake():
 
     def startGame(self):
         self.LCD.fill(self.LCD.BLACK)
-        self.setBorder()
+        self.setBorder(self.LCD.WHITE)
         self.growSnake()
         self.setFruitLocation()
         self.drawFruit()
