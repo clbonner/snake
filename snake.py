@@ -33,10 +33,10 @@ class Snake():
 
         # levels are defined by the speed (ms) that the snake moves
         self.CURRENT_LEVEL = level
-        if level == 1: self.SPEED = 500
-        if level == 2: self.SPEED = 400
-        if level == 3: self.SPEED = 300
-        if level == 4: self.SPEED = 250
+        if level == 1: self.SPEED = 350
+        if level == 2: self.SPEED = 300
+        if level == 3: self.SPEED = 250
+        if level == 4: self.SPEED = 225
         if level == 5: self.SPEED = 200
     
     # these two functions return relative screen width or height given a percentage
@@ -172,7 +172,7 @@ class Snake():
                 self.LCD.hline(n, (self.LCD.height - 1) - n, self.LCD.width, self.LCD.WHITE)
                 self.LCD.vline(n, n, self.LCD.height, self.LCD.WHITE)
                 self.LCD.vline((self.LCD.width - 1) - n, n, self.LCD.height, self.LCD.WHITE)
-                
+
     def instructions(self):
         self.LCD.fill(self.LCD.BLACK)
         self.LCD.text("Move UP", self.pWidth(10), self.pHeight(5), self.LCD.WHITE)
