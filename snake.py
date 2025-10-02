@@ -5,9 +5,7 @@ import time, random
 class Snake():
     def __init__(self, level, LCD):
         self.LCD = LCD
-        self.LCD.fill(self.LCD.BLACK)
-        self.LCD.show()
-
+        
         # the screen size is divided up into 8x8 pixel squares where the snake or fruit is placed
         self.height = int(self.LCD.height / 8)
         self.width = int(self.LCD.width / 8)
