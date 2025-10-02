@@ -8,11 +8,11 @@ class Snake():
         self.LCD.fill(self.LCD.BLACK)
         self.LCD.show()
 
-        # the screen size is divided up into 8x8 pixel squares
+        # the screen size is divided up into 8x8 pixel squares where the snake or fruit is placed
         self.height = int(self.LCD.height / 8)
         self.width = int(self.LCD.width / 8)
 
-        # height and width value for 1% of screen for positioning text
+        # height and width value for 1% of screen for positioning text/shapes relative to screen size
         self.WIDTH_1PC = int(self.LCD.width / 100)
         self.HEIGHT_1PC = int(self.LCD.height / 100)
 
@@ -31,7 +31,7 @@ class Snake():
         self.fruit_eaten = False
         self.game_over = False
 
-        # levels are defined by speed (ms)
+        # levels are defined by the speed (ms) that the snake moves
         self.CURRENT_LEVEL = level
         if level == 1: self.SPEED = 500
         if level == 2: self.SPEED = 400
@@ -40,6 +40,7 @@ class Snake():
         if level == 5: self.SPEED = 200
     
     def setFruitLocation(self):
+        # location minus 2 to account for border
         self.fruit_coordinates = {
             'x': random.randint(1, int(self.width) - 2), 
             'y': random.randint(1, int(self.height) - 2)
@@ -71,6 +72,7 @@ class Snake():
     def drawSnake(self):
         for location in self.coordinates:
             self.LCD.fill_rect(location['x'] * 8, location['y'] * 8, 8, 8, self.LCD.GREEN)
+            # draw eyes on the head of the snake
             if self.coordinates.index(location) == 0:
                 self.LCD.fill_rect(location['x'] * 8 + 5, location['y'] * 8 + 2, 2, 2, self.LCD.BLACK)
                 self.LCD.fill_rect(location['x'] * 8 + 1, location['y'] * 8 + 2, 2, 2, self.LCD.BLACK)
@@ -78,6 +80,7 @@ class Snake():
 
     def clearSnake(self, location):
         self.LCD.fill_rect(location['x'] * 8, location['y'] * 8, 8, 8, self.LCD.BLACK)
+        self.LCD.show()
 
     def moveSnake(self):
         head = self.coordinates[0]
