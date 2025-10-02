@@ -56,7 +56,6 @@ class Snake():
             self.fruit_coordinates['y'] * 8, 8, 8, 
             self.LCD.BLUE
         )
-        self.LCD.show()
 
     def isFruitEaten(self):
         if (self.coordinates[0] == self.fruit_coordinates):
