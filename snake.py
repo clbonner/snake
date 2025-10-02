@@ -22,7 +22,7 @@ class Snake():
         self.right = Pin(2 ,Pin.IN,Pin.PULL_UP)
         self.down = Pin(15,Pin.IN,Pin.PULL_UP)
 
-        # snake coordinates
+        # snake coordinates - direction is compass positions N,E,S,W
         self.coordinates = [{'x': int(self.width / 2), 'y': int(self.height / 2)}]
         self.direction = 'N'
 
@@ -86,10 +86,12 @@ class Snake():
                 self.LCD.fill_rect(location['x'] * 8 + 1, location['y'] * 8 + 2, 2, 2, self.LCD.BLACK)
         self.LCD.show()
 
+    # removes end snake position from screen
     def clearSnake(self, location):
         self.LCD.fill_rect(location['x'] * 8, location['y'] * 8, 8, 8, self.LCD.BLACK)
         self.LCD.show()
 
+    # advances snake by one position and removes last list item
     def moveSnake(self):
         head = self.coordinates[0]
         if (self.direction == 'N'):
@@ -104,6 +106,7 @@ class Snake():
         self.clearSnake(self.coordinates.pop(len(self.coordinates) - 1))
         self.checkOutOfBounds()
 
+    # inserts a new head at the start of the list
     def growSnake(self):
         head = self.coordinates[0]
         if (self.direction == 'N'):
@@ -199,6 +202,7 @@ class Snake():
 
         self.waitForKeyPress()
 
+    # waits for any key to be pressed before continuing
     def waitForKeyPress(self):
         while (True):
             time.sleep_ms(100)
