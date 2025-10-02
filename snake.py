@@ -12,10 +12,6 @@ class Snake():
         self.height = int(self.LCD.height / 8)
         self.width = int(self.LCD.width / 8)
 
-        # height and width value for 1% of screen for positioning text/shapes relative to screen size
-        self.WIDTH_1PC = self.LCD.width / 100
-        self.HEIGHT_1PC = self.LCD.height / 100
-
         # key0 = down / key1 = left / key2 = right / key3 = up
         self.up = Pin(3 ,Pin.IN,Pin.PULL_UP)
         self.left = Pin(17,Pin.IN,Pin.PULL_UP) 
@@ -41,10 +37,10 @@ class Snake():
     
     # these two functions return relative screen width or height given a percentage
     def pWidth(self, percent):
-        return int(self.WIDTH_1PC * percent)
+        return int((self.LCD.width / 100) * percent)
     
     def pHeight(self, percent):
-        return int(self.HEIGHT_1PC * percent)
+        return int((self.LCD.height / 100) * percent)
     
     def setFruitLocation(self):
         # location minus 2 to account for border
