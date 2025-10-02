@@ -139,9 +139,7 @@ class Snake():
                 self.gameOver()
 
     def gameOver(self):
-        for n in range(0, 64):
-            self.LCD.rect(n, n, self.LCD.width - n * 2, self.LCD.height - n * 2, self.LCD.GREEN)
-            self.LCD.show()
+        self.endGameEffect()
         self.LCD.text("GAME OVER", self.pWidth(22), self.pHeight(45), self.LCD.RED)
         self.LCD.show()
 
@@ -149,10 +147,7 @@ class Snake():
         self.waitForKeyPress()
     
     def gameWon(self):
-        for n in range(0, 64):
-            self.LCD.rect(n, n, self.LCD.width - n * 2, self.LCD.height - n * 2, self.LCD.GREEN)
-            self.LCD.show()
-
+        self.endGameEffect()
         if (self.CURRENT_LEVEL < 5):
             self.LCD.text("LEVEL", self.pWidth(37), self.pHeight(40), self.LCD.RED)
             self.LCD.text("COMPLETE!", self.pWidth(25), self.pHeight(50), self.LCD.RED)
@@ -164,6 +159,11 @@ class Snake():
         self.LCD.show()
         self.game_over = True
         self.waitForKeyPress()
+
+    def endGameEffect(self):
+        for n in range(8, self.pHeight(50)):
+            self.LCD.rect(n, n, self.LCD.width - n * 2, self.LCD.height - n * 2, self.LCD.GREEN)
+            self.LCD.show()
     
     def instructions(self):
         self.LCD.fill(self.LCD.BLACK)
