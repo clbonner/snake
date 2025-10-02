@@ -13,8 +13,8 @@ class Snake():
         self.width = int(self.LCD.width / 8)
 
         # height and width value for 1% of screen for positioning text/shapes relative to screen size
-        self.WIDTH_1PC = int(self.LCD.width / 100)
-        self.HEIGHT_1PC = int(self.LCD.height / 100)
+        self.WIDTH_1PC = self.LCD.width / 100
+        self.HEIGHT_1PC = self.LCD.height / 100
 
         # key0 = down / key1 = left / key2 = right / key3 = up
         self.up = Pin(3 ,Pin.IN,Pin.PULL_UP)
@@ -38,6 +38,13 @@ class Snake():
         if level == 3: self.SPEED = 300
         if level == 4: self.SPEED = 250
         if level == 5: self.SPEED = 200
+    
+    # these two functions return relative screen width or height given a percentage
+    def pWidth(self, percent):
+        return int(self.WIDTH_1PC * percent)
+    
+    def pHeight(self, percent):
+        return int(self.HEIGHT_1PC * percent)
     
     def setFruitLocation(self):
         # location minus 2 to account for border
@@ -135,7 +142,7 @@ class Snake():
         for n in range(0, 64):
             self.LCD.rect(n, n, self.LCD.width - n * 2, self.LCD.height - n * 2, self.LCD.GREEN)
             self.LCD.show()
-        self.LCD.text("GAME OVER", int(self.WIDTH_1PC * 28), int(self.HEIGHT_1PC * 60), self.LCD.RED)
+        self.LCD.text("GAME OVER", self.pWidth(22), self.pHeight(45), self.LCD.RED)
         self.LCD.show()
 
         self.game_over = True
@@ -147,11 +154,11 @@ class Snake():
             self.LCD.show()
 
         if (self.CURRENT_LEVEL < 5):
-            self.LCD.text("LEVEL", int(self.WIDTH_1PC * 46), int(self.HEIGHT_1PC * 50), self.LCD.RED)
-            self.LCD.text("COMPLETE!", int(self.WIDTH_1PC * 30), int(self.HEIGHT_1PC * 60), self.LCD.RED)
+            self.LCD.text("LEVEL", self.pWidth(37), self.pHeight(40), self.LCD.RED)
+            self.LCD.text("COMPLETE!", self.pWidth(25), self.pHeight(50), self.LCD.RED)
             self.CURRENT_LEVEL += 1
         else:
-            self.LCD.text("YOU WIN!", int(self.WIDTH_1PC * 33), int(self.HEIGHT_1PC * 50), self.LCD.RED)
+            self.LCD.text("YOU WIN!", self.pWidth(28), self.pHeight(45), self.LCD.RED)
             self.CURRENT_LEVEL = 1
 
         self.LCD.show()
@@ -160,26 +167,26 @@ class Snake():
     
     def instructions(self):
         self.LCD.fill(self.LCD.BLACK)
-        self.LCD.text("Move UP", self.WIDTH_1PC * 10, self.HEIGHT_1PC * 5, self.LCD.WHITE)
-        self.LCD.text("Move RIGHT", self.WIDTH_1PC * 10, self.HEIGHT_1PC * 40, self.LCD.WHITE)
-        self.LCD.text("Move LEFT", self.WIDTH_1PC * 10, self.HEIGHT_1PC * 79, self.LCD.WHITE)
-        self.LCD.text("Move DOWN", self.WIDTH_1PC * 10, self.HEIGHT_1PC * 115, self.LCD.WHITE)
+        self.LCD.text("Move UP", self.pWidth(10), self.pHeight(5), self.LCD.WHITE)
+        self.LCD.text("Move RIGHT", self.pWidth(10), self.pHeight(32), self.LCD.WHITE)
+        self.LCD.text("Move LEFT", self.pWidth(10), self.pHeight(59), self.LCD.WHITE)
+        self.LCD.text("Move DOWN", self.pWidth(10), self.pHeight(86), self.LCD.WHITE)
         # arrow 1
-        self.LCD.hline(self.WIDTH_1PC * 100, self.HEIGHT_1PC * 10, 25, self.LCD.WHITE)
-        self.LCD.line(self.WIDTH_1PC * 125, self.HEIGHT_1PC * 10, self.WIDTH_1PC * 115, self.HEIGHT_1PC * 5, self.LCD.WHITE)
-        self.LCD.line(self.WIDTH_1PC * 125, self.HEIGHT_1PC * 10, self.WIDTH_1PC * 115, self.HEIGHT_1PC * 15, self.LCD.WHITE)
+        self.LCD.hline(self.pWidth(80), self.pHeight(8), 20, self.LCD.WHITE)
+        self.LCD.line(self.pWidth(98), self.pHeight(8), self.pWidth(95), self.pHeight(5), self.LCD.WHITE)
+        self.LCD.line(self.pWidth(98), self.pHeight(8), self.pWidth(95), self.pHeight(11), self.LCD.WHITE)
         # arrow 2
-        self.LCD.hline(self.WIDTH_1PC * 100, self.HEIGHT_1PC * 45, 25, self.LCD.WHITE)
-        self.LCD.line(self.WIDTH_1PC * 125, self.HEIGHT_1PC * 45, self.WIDTH_1PC * 115, self.HEIGHT_1PC * 40, self.LCD.WHITE)
-        self.LCD.line(self.WIDTH_1PC * 125, self.HEIGHT_1PC * 45, self.WIDTH_1PC * 115, self.HEIGHT_1PC * 50, self.LCD.WHITE)
+        self.LCD.hline(self.pWidth(80), self.pHeight(35), 20, self.LCD.WHITE)
+        self.LCD.line(self.pWidth(98), self.pHeight(35), self.pWidth(95), self.pHeight(32), self.LCD.WHITE)
+        self.LCD.line(self.pWidth(98), self.pHeight(35), self.pWidth(95), self.pHeight(38), self.LCD.WHITE)
         # arrow 3
-        self.LCD.hline(self.WIDTH_1PC * 100, self.HEIGHT_1PC * 84, 25, self.LCD.WHITE)
-        self.LCD.line(self.WIDTH_1PC * 125, self.HEIGHT_1PC * 84, self.WIDTH_1PC * 115, self.HEIGHT_1PC * 79, self.LCD.WHITE)
-        self.LCD.line(self.WIDTH_1PC * 125, self.HEIGHT_1PC * 84, self.WIDTH_1PC * 115, self.HEIGHT_1PC * 89, self.LCD.WHITE)
+        self.LCD.hline(self.pWidth(80), self.pHeight(62), 20, self.LCD.WHITE)
+        self.LCD.line(self.pWidth(98), self.pHeight(62), self.pWidth(95), self.pHeight(59), self.LCD.WHITE)
+        self.LCD.line(self.pWidth(98), self.pHeight(62), self.pWidth(95), self.pHeight(65), self.LCD.WHITE)
         # arrow 4
-        self.LCD.hline(self.WIDTH_1PC * 100, self.HEIGHT_1PC * 120, 25, self.LCD.WHITE)
-        self.LCD.line(self.WIDTH_1PC * 125, self.HEIGHT_1PC * 120, self.WIDTH_1PC * 115, self.HEIGHT_1PC * 115, self.LCD.WHITE)
-        self.LCD.line(self.WIDTH_1PC * 125, self.HEIGHT_1PC * 120, self.WIDTH_1PC * 115, self.HEIGHT_1PC * 125, self.LCD.WHITE)
+        self.LCD.hline(self.pWidth(80), self.pHeight(89), 20, self.LCD.WHITE)
+        self.LCD.line(self.pWidth(98), self.pHeight(89), self.pWidth(95), self.pHeight(85.5), self.LCD.WHITE)
+        self.LCD.line(self.pWidth(98), self.pHeight(89), self.pWidth(95), self.pHeight(92), self.LCD.WHITE)
         self.LCD.show()
 
         self.waitForKeyPress()
@@ -219,10 +226,10 @@ class Snake():
         level_text = "LEVEL " + str(self.CURRENT_LEVEL)
 
         self.LCD.fill(self.LCD.BLACK)
-        self.LCD.text("SNAKE", int(self.WIDTH_1PC * 43), int(self.HEIGHT_1PC * 20), self.LCD.GREEN)
-        self.LCD.text(level_text, int(self.WIDTH_1PC * 37), int(self.HEIGHT_1PC * 40), self.LCD.GREEN)
-        self.LCD.text("Press any key", int(self.WIDTH_1PC * 10), int(self.HEIGHT_1PC * 60), self.LCD.WHITE)
-        self.LCD.text("to start", int(self.WIDTH_1PC * 27), int(self.HEIGHT_1PC * 70), self.LCD.WHITE)
+        self.LCD.text("SNAKE", self.pWidth(35), self.pHeight(20), self.LCD.GREEN)
+        self.LCD.text(level_text, self.pWidth(29), self.pHeight(40), self.LCD.GREEN)
+        self.LCD.text("Press any key", self.pWidth(8), self.pHeight(60), self.LCD.WHITE)
+        self.LCD.text("to start", self.pWidth(25), self.pHeight(70), self.LCD.WHITE)
         self.LCD.show()
 
         self.waitForKeyPress()
